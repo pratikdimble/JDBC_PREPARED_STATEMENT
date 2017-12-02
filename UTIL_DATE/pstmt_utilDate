@@ -1,0 +1,83 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class pstmt_utilDate
+{
+	public static void main(String[] args) throws Exception		//MAIN() STARTS
+	{
+			//LOAD AND REGISTER THE DRIVER
+		Class.forName("oracle.jdbc.OracleDriver");
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "oracle");
+		PreparedStatement pst=con.prepareStatement("insert into work values(?,?,?,?)");
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		
+			while(true)		//WHILE STRTS FOR USER INPUT
+			{	
+					//TAKING THE INPUT FROM USER
+				System.out.println("\n\t USING SYSTEM DATE (USE util.date & sql.date)");
+				System.out.print("\n\tEnter the Worker No: ");
+				int no=Integer.parseInt(br.readLine());
+				System.out.print("\n\tEnter the Worker Name: ");
+				String name=br.readLine();
+				System.out.print("\n\tEnter the Worker City: ");
+				String city=br.readLine();
+				
+				java.util.Date d=new java.util.Date();		//taking the date from jvm
+				int val=d.getDate();
+				//converting utl date to sql date
+				java.sql.Date dt=new java.sql.Date(val);
+				
+
+						//SETTING THE VALUES TO THE PSTMT
+					pst.setInt(1, no);
+					pst.setString(2, name);
+					pst.setString(3, city);
+					pst.setDate(4,dt );
+					
+							pst.executeUpdate();		//USING STATIC VALUE OF DATE
+												
+							System.out.print("\n\t\t ==RECORD INSERTED SUCCESSFULLY==");
+																
+							System.out.print("\n\t\t ==Add One More Record(y/n): ");
+							String ch=br.readLine();
+								if(ch.equals("y"))
+								{
+									continue;
+								}else
+								{
+									break;
+								}
+				
+			}//WHILE ENDS
+			
+					
+			
+				String sql="select * from work";
+				Statement st=con.createStatement();
+				ResultSet rs=st.executeQuery(sql);
+				System.out.println("\n\t No \t Name \t City \t Date of Joining ");
+				System.out.println("\n\t================================================== ");
+				while(rs.next())
+				{
+					System.out.print("\n\t "+rs.getInt(1)+" \t "+rs.getString(2)+" \t "+rs.getString(3)+"\t"+rs.getDate(4)+"\t");
+				}
+				System.out.println("\n\t=================================================== ");
+				
+				
+			System.out.print("\n\t\t ==PROGRAMME BY PRATIK DIMBLE==");
+					
+			//	CLOSE THE RESOURSES
+				br.close();
+				con.close();
+				st.close();
+				rs.close();
+				pst.close();
+		
+	}		//MAIN() ENDS
+
+}		//		CLASS ENDS
