@@ -1,0 +1,75 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class pstmt_Insert 		//CLASS STARTS
+{
+	public static void main(String[] args) throws Exception		//MAIN() STARTS
+	{
+			//LOAD AND REGISTER THE DRIVER
+		Class.forName("oracle.jdbc.OracleDriver");
+    //establish connection between java app and database
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "oracle");
+    //prepare the statement
+		PreparedStatement pst=con.prepareStatement("insert into stud values(?,?,?,?)");
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		
+			while(true)		//WHILE STRTS FOR USER INPUT
+			{	
+					//TAKING THE INPUT FROM USER
+				System.out.print("\n\tEnter the Student No: ");
+				int no=Integer.parseInt(br.readLine());
+				System.out.print("\n\tEnter the Student Name: ");
+				String name=br.readLine();
+				System.out.print("\n\tEnter the Student Mail Id: ");
+				String mail=br.readLine();
+				System.out.print("\n\tEnter the Student City: ");
+				String city=br.readLine();
+				
+						//SETTING THE VALUES TO THE PSTMT
+					pst.setInt(1, no);
+					pst.setString(2, name);
+					pst.setString(3, mail);
+					pst.setString(4, city);
+							pst.execute();
+								
+							System.out.print("\n\t\t ==RECORD INSERTED SUCCESSFULLY==");
+							System.out.print("\n\t\t ==Add One More Record(y/n): ");
+							String ch=br.readLine();
+								if(ch.equals("y"))
+								{
+									continue;
+								}else
+								{
+									break;
+								}
+				
+			}//WHILE ENDS
+				String sql="select * from stud";
+				Statement st=con.createStatement();
+				ResultSet rs=st.executeQuery(sql);
+				System.out.println("\n\t No \t Name \t Email \t\t City ");
+				System.out.println("\n\t================================================== ");
+				while(rs.next())
+				{
+					System.out.print("\n\t "+rs.getInt(1)+" \t "+rs.getString(2)+" \t "+rs.getString(3)+" \t \t "+rs.getString(4)+"\t");
+				}
+				System.out.println("\n\t=================================================== ");
+				
+				
+			System.out.print("\n\t\t ==PROGRAMME BY PRATIK DIMBLE(11:30)==");
+					
+			//	CLOSE THE RESOURSES
+				br.close();
+				con.close();
+				st.close();
+				rs.close();
+				pst.close();
+		
+	}		//MAIN() ENDS
+
+}		//		CLASS ENDS
