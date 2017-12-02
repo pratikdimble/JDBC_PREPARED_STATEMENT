@@ -1,0 +1,51 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class pstmt_Update
+{
+	public static void main(String[] args) throws Exception		//MAIN() STARTS
+	{
+			//LOAD AND REGISTER THE DRIVER
+		Class.forName("oracle.jdbc.OracleDriver");
+		//establish connection between java app and database
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "oracle");
+		//prepare the statement
+		PreparedStatement pst=con.prepareStatement("select * from stud where city=?");
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+//taking user input
+				System.out.print("\n\tEnter the Student City: ");
+				String city=br.readLine();
+		//set values to prepared statement
+				pst.setString(1, city);
+				//execute the query
+				ResultSet rs=pst.executeQuery();
+				System.out.println("\n\t No \t Name \t Email \t\t City ");
+				System.out.println("\n\t================================================== ");
+				while(rs.next())
+				{
+					System.out.print("\n\t "+rs.getInt(1)+" \t "+rs.getString(2)+" \t "+rs.getString(3)+" \t \t "+rs.getString(4)+"\t");
+				}
+				System.out.println("\n\t=================================================== ");
+				
+								
+							System.out.print("\n\n\n\t\t ==RECORD Updated SUCCESSFULLY==");
+						
+
+								
+						//	CLOSE THE RESOURSES
+							br.close();
+							con.close();
+							st.close();
+							rs.close();
+							pst.close();
+
+			System.out.print("\n\t\t ==PROGRAMME BY PRATIK DIMBLE==");
+		
+	}		//MAIN() ENDS
+
+}		//		CLASS ENDS
